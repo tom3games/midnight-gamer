@@ -337,7 +337,7 @@ function addSticky() {
 Snd.def({
   ms: ['snd/ms1.mp3', 'snd/ms2.mp3', 'snd/ms3.mp3'], ds: ['snd/ds1.mp3', 'snd/ds2.mp3', 'snd/ds3.mp3'], cr: ['snd/cr1.mp3', 'snd/cr2.mp3', 'snd/cr3.mp3'],
   knob: 'snd/knob.mp3', dopen: 'snd/dopen.mp3', dclose: ['snd/dclose1.mp3', 'snd/dclose2.mp3'], flush: 'snd/flush.mp3', cl: ['snd/cl1.mp3', 'snd/cl2.mp3', 'snd/cl3.mp3', 'snd/cl4.mp3'],
-  mew: ['snd/mew1.mp3', 'snd/mew2.mp3'], sn: ['snd/sn1.mp3', 'snd/sn2.mp3', 'snd/sn3.mp3', 'snd/sn4.mp3'], yawn: 'snd/yawn.mp3', car: 'snd/car.mp3', rooster: 'snd/rooster.mp3',
+  mew: ['snd/mew1.mp3', 'snd/mew2.mp3'], sn: ['snd/sn1.mp3', 'snd/sn2.mp3', 'snd/sn3.mp3', 'snd/sn4.mp3'], yawn: 'snd/yawn.mp3', car: 'snd/car.mp3', rooster: 'snd/rooster2.mp3',
   hit: ['snd/hit1.mp3', 'snd/hit2.mp3', 'snd/hit3.mp3'], click: 'snd/click.mp3', stage: 'snd/stage.mp3', bosswin: 'snd/bosswin.mp3', thud: 'snd/thud.mp3', paper: 'snd/paper.mp3',
   win: 'snd/win.mp3', mid: 'snd/mid.mp3', lose: 'snd/lose.mp3',
 })

@@ -33,7 +33,7 @@
 - snd/sn4.mp3: File:Snoring of old man.ogg (sliced) / Saaabaaato / CC0
 - snd/yawn.mp3: File:Yawning 1.ogg / ezwa / Public domain
 - snd/car.mp3: File:Car on cobblestone.ogg / mastermesh / Public domain
-- snd/rooster.mp3: File:Nl-rooster vrij.ogg / Marcel coenders / CC0
+- snd/rooster2.mp3: File:Medium rooster crowing.ogg / alys / Public domain（2.55秒から3.4秒を切り出し）
 - snd/hit1.mp3: Interface Sounds / Kenney / CC0
 - snd/hit2.mp3: Interface Sounds / Kenney / CC0
 - snd/hit3.mp3: Interface Sounds / Kenney / CC0
