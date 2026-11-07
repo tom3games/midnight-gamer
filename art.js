@@ -1,0 +1,2 @@
+// art/key.py が作る。絵の 幅/高さ
+window.MG_ART = {"mom_peek": 0.5419, "mom_listen": 0.5635, "mom_relief": 0.5738, "mom_caught": 0.6074, "mom_yawn": 0.5853, "mom_win": 0.632, "dad_walk": 0.5623, "dad_peek": 0.6297, "dad_gamer": 0.5491, "kid_play": 0.7919, "kid_hide": 0.8891, "kid_sleep": 0.8026, "hand_l": 0.8655, "hand_r": 0.8477, "pillow": 1.2893, "cat_crouch": 0.8051, "cat_leap": 1.8182, "cat_swat": 0.9917}

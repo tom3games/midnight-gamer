@@ -1,0 +1,10 @@
+ART STYLE (strict): Japanese gag-manga illustration for a silly comedy game, printed and cut out like a paper puppet. Thick, confident, slightly wobbly hand-inked black outlines. Flat cel colors with at most one simple shadow tone. Huge, rubbery, hilariously exaggerated cartoon face, few lines, no wrinkles. Chunky simplified body about 3 heads tall, big head, no anatomical detail. Warm and funny, never scary, never angry-violent, never gross. No realism, no photo, no 3D render, no gradients, no airbrush, no texture noise, no blood, nothing sexual. An original invented character, not based on any existing franchise, brand or real person.
+
+SUBJECT: a character sheet of the SAME fictional dad as the reference image (same face, same bald head with a few strands of hair, same chubby build), at 2 a.m. in a loose blue-and-white striped pajama set, barefoot. Very sleepy and harmless, never scary.
+
+Draw EXACTLY THREE full-body poses side by side in three equal columns, none overlapping, wide empty gaps, feet on the same baseline, same scale:
+1. LEFT: "walk": seen from the SIDE, facing LEFT, heavy sleepy stomping walk with one knee high, scratching his belly under the pajama top, eyes closed, mouth open, a drop of drool.
+2. CENTER: "peek": facing the viewer, one hand on an invisible door frame at head height, eyes barely open slits, hair strands standing up, mouth crooked, scratching his head with the other hand.
+3. RIGHT: "secret gamer": facing the viewer, holding a small plain dark-blue rounded handheld game device in both hands (blank original design, no logos, no letters), its screen lighting his face from below with cool blue light, startled wide eyes, then one index finger pressed against his lips as if saying "shh", sweat drop on his head.
+
+BACKGROUND: perfectly flat pure chroma green #00FF00 across the whole image, no floor, no shadow, no text, no speech bubbles, no lettering, no extra objects. Do not use any green on the character. Whole figure inside the frame with margin on all sides.

@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>深夜ゲーム、バレたら没収 | MIDNIGHT GAMER</title>
+<meta name="description" content="深夜2時、布団の中でこっそりゲーム。足音・ドアノブ・猫を読んで、画面を隠して寝たふり。朝までにボスを倒せ。ばれかけ3回で没収。ブラウザで遊べる3Dバカゲー。">
+<meta name="theme-color" content="#0b1430">
+<meta property="og:type" content="website">
+<meta property="og:title" content="深夜ゲーム、バレたら没収 | MIDNIGHT GAMER">
+<meta property="og:description" content="深夜2時、布団の中でこっそりゲーム。足音を読んで画面を隠せ。朝までにボスを倒せ。ばれかけ3回で没収。">
+<meta property="og:image" content="https://tom3games.github.io/midnight-gamer/og.png?v=1">
+<meta property="og:url" content="https://tom3games.github.io/midnight-gamer/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="深夜ゲーム、バレたら没収 | MIDNIGHT GAMER">
+<meta name="twitter:description" content="布団の中でこっそりゲーム。足音を読んで画面を隠せ。">
+<meta name="twitter:image" content="https://tom3games.github.io/midnight-gamer/og.png?v=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='14' width='56' height='36' rx='12' fill='%2397d3b4' stroke='%23222' stroke-width='3'/%3E%3Crect x='20' y='20' width='24' height='22' fill='%23233'/%3E%3Ccircle cx='51' cy='36' r='5' fill='%23d8443a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Klee+One:wght@600&display=swap" rel="stylesheet">
+<style>
+[hidden]{display:none!important}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --night:#0b1430;--ink:#1b1a22;--mint:#97d3b4;--mint2:#6fb592;--mintd:#3f7d63;--red:#d8443a;--lcd:#2b3a2e;--lcd2:#a9c79a;--memo:#fbe57a;--cream:#f7eedc;--check:#d9433a;
+  --dot:'DotGothic16','Hiragino Kaku Gothic ProN',monospace;--hand:'Klee One','Hiragino Maru Gothic ProN',serif;
+  --conTop:calc(41svh + 8px);--conW:min(94vw,420px);--actH:clamp(64px,10.5svh,86px);
+}
+html{background:var(--night);touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{height:100%;color:var(--cream);font-family:var(--hand);-webkit-tap-highlight-color:transparent;word-break:auto-phrase;line-break:strict;overflow-wrap:anywhere}
+body{overflow:hidden;background:var(--night);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+button,canvas{touch-action:manipulation}
+button{font-family:inherit;color:inherit;font-size:inherit;-webkit-user-select:none;user-select:none;cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--memo);outline-offset:3px}
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+#fx{position:fixed;inset:0;z-index:30;pointer-events:none;overflow:hidden}
+.view{position:fixed;inset:0;z-index:20;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:max(56px,calc(env(safe-area-inset-top) + 50px)) 16px max(14px,calc(env(safe-area-inset-bottom) + 10px));pointer-events:none}
+.view > *{pointer-events:auto}
+
+/* ロード画面: ゲーム機の起動画面 */
+#boot{position:fixed;inset:0;z-index:90;background:#121212;display:flex;align-items:center;justify-content:center;--p:0;transition:opacity .35s}
+#boot.out{opacity:0}
+#boot .bs{width:min(260px,72vw);aspect-ratio:4/3;background:var(--lcd2);border:10px solid #333;border-radius:6px;box-shadow:0 0 0 3px #555;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#26361f;font-family:var(--dot);overflow:hidden}
+#boot .lg{font-size:30px;letter-spacing:.12em;animation:drop 1.2s steps(8) forwards;transform:translateY(-60px)}
+@keyframes drop{to{transform:none}}
+#boot .cells{display:flex;gap:3px}
+#boot .cells i{width:12px;height:10px;background:#26361f;opacity:.15}
+#boot p{font-size:13px}
+#boot .blink{animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:.2}}
+
+#corner{position:fixed;top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));z-index:60;display:flex;gap:8px}
+#corner button{height:40px;min-width:44px;padding:0 10px;border:1px solid rgba(247,238,220,.35);border-radius:4px;background:rgba(10,14,30,.7);color:var(--cream);font-family:var(--dot);font-size:14px;display:flex;align-items:center;justify-content:center}
+#corner svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* 手前: 布団にくるまった自分・手・ゲーム機 */
+#fg{position:fixed;inset:0;z-index:10;pointer-events:none;overflow:hidden}
+#fg .glow{position:absolute;left:50%;top:var(--conTop);width:150vw;height:90svh;transform:translate(-50%,-38%);background:radial-gradient(closest-side,rgba(140,215,255,.22),rgba(140,215,255,0));opacity:var(--lit,1);transition:opacity .25s}
+#kid{position:absolute;left:50%;top:calc(var(--conTop) + var(--conW) / 2.05 - 52px);width:min(104vw,470px);transform:translate(-50%,var(--kidY,0px));filter:brightness(var(--kb,.62)) saturate(.85);transition:transform .35s}
+#kid img{width:100%;display:block}
+.hand{position:absolute;top:calc(var(--conTop) + var(--conW) * .30);width:calc(var(--conW) * .30);filter:brightness(var(--kb,.62));transition:transform .3s,opacity .3s}
+#handL{left:calc(50% - var(--conW) * .58)}
+#handR{left:calc(50% + var(--conW) * .30)}
+#pil{position:absolute;right:-6vw;bottom:calc(var(--actH) + 4px);width:min(46vw,210px);filter:brightness(var(--kb,.62));transform:translateY(110%) rotate(-8deg);transition:transform .4s}
+#quilt{position:absolute;left:-5vw;right:-5vw;top:calc(var(--conTop) + var(--conW) * .27);bottom:0;background:repeating-conic-gradient(var(--check) 0 25%,var(--cream) 0 50%) 0 0/56px 56px;border-top:5px solid var(--ink);border-radius:46% 54% 0 0/40px 40px 0 0;filter:brightness(var(--kb,.62));transform:translateY(100%);transition:transform .25s}
+
+/* ゲーム機（架空の機種 YOFUKA） */
+.con{position:absolute;left:50%;top:var(--conTop);width:var(--conW);aspect-ratio:2.05/1;transform:translateX(-50%);background:linear-gradient(170deg,#aee0c5,var(--mint) 40%,var(--mint2));border:3px solid var(--ink);border-radius:30px 30px 46px 46px/30px 30px 60px 60px;box-shadow:inset 0 -8px 0 rgba(0,0,0,.14),inset 0 4px 0 rgba(255,255,255,.35);pointer-events:auto;transition:transform .25s,filter .25s;transform-origin:50% 100%}
+.con .scrwrap{position:absolute;left:23%;width:54%;top:9%;bottom:15%;background:#25302a;border:3px solid var(--ink);border-radius:8px;padding:5px;display:flex;flex-direction:column}
+.con canvas{width:100%;flex:1;min-height:0;display:block;image-rendering:pixelated;background:var(--lcd2);border-radius:2px}
+.con .logo{position:absolute;left:0;right:0;bottom:3%;text-align:center;font-family:var(--dot);font-size:11px;letter-spacing:.3em;color:var(--mintd)}
+.con .dpad{position:absolute;left:6%;top:30%;width:13%;aspect-ratio:1;background:linear-gradient(#333,#333) 50% 0/34% 100% no-repeat,linear-gradient(#333,#333) 0 50%/100% 34% no-repeat;filter:drop-shadow(0 3px 0 rgba(0,0,0,.25))}
+.con .spk{position:absolute;left:7%;bottom:14%;width:10%;height:12%;background:radial-gradient(circle,#3d6e57 1.6px,transparent 2px) 0 0/7px 7px}
+#bA{position:absolute;right:5%;top:24%;width:17%;aspect-ratio:1;min-width:58px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f07a6e,var(--red) 60%,#a92d25);border:3px solid var(--ink);box-shadow:0 6px 0 #7a1e18;color:#fff;font-family:var(--dot);font-size:24px;display:flex;align-items:center;justify-content:center;transition:transform .05s,box-shadow .05s}
+#bA.on{transform:translateY(5px);box-shadow:0 1px 0 #7a1e18}
+#bA.ping,.act.ping{animation:ping .6s ease-in-out infinite alternate}
+@keyframes ping{to{box-shadow:0 0 0 5px #fff,0 0 26px 10px rgba(255,255,255,.75)}}
+#led{position:absolute;left:9%;top:9%;width:10px;height:10px;border-radius:50%;background:#2a5d3a;border:2px solid var(--ink)}
+#led.on{background:#7dff9a;box-shadow:0 0 10px 4px rgba(125,255,154,.8)}
+#bVol{position:absolute;right:9%;top:-22px;height:40px;min-width:62px;display:flex;align-items:center;gap:5px;padding:0 6px;font-family:var(--dot);font-size:12px;color:var(--ink)}
+#bVol .sl{width:30px;height:16px;border-radius:8px;background:#2c3a33;border:2px solid var(--ink);position:relative}
+#bVol .sl i{position:absolute;top:1px;left:15px;width:11px;height:10px;border-radius:3px;background:#f2f2f2;transition:left .12s}
+#bVol.off .sl i{left:1px}
+#bVol b{background:var(--mint);border:2px solid var(--ink);border-radius:5px;padding:1px 4px;font-weight:400}
+#stk{position:absolute;left:3%;top:-16px;display:flex;gap:4px}
+#stk i{display:block;width:40px;height:34px;background:var(--memo);box-shadow:0 3px 5px rgba(0,0,0,.35);font-family:var(--hand);font-style:normal;font-size:11px;line-height:1.15;color:#3b2f10;padding:3px;transform:rotate(-7deg)}
+#stk i:nth-child(2){transform:rotate(5deg)}
+body.st-futon .con{transform:translateX(-50%) translateY(38%) rotateX(68deg) scale(.92);filter:brightness(.3)}
+body.st-futon #quilt{transform:translateY(0)}
+body.st-pillow .con,body.st-moving .con{transform:translateX(-10%) translateY(250%) rotate(24deg) scale(.8);filter:brightness(.4)}
+body.st-pillow .hand,body.st-moving .hand{transform:translateY(120%);opacity:0}
+body.st-pillow #pil{transform:translateY(0) rotate(-8deg)}
+body.st-futon .hand{transform:translateY(40%)}
+body.st-taken .con{transform:translateX(-50%) translateY(-120%) rotate(-10deg)!important;opacity:0;transition:transform .7s ease-in,opacity .7s .2s}
+body.st-taken .hand{transform:translateY(60%)}
+body.mode-result #fg,body.mode-how #fg{display:none}
+
+/* 寝たふり: まぶたが閉じて、細い隙間からドアだけ見える */
+#lids{position:fixed;inset:0;z-index:15;pointer-events:none;--o:0}
+#lids i{position:absolute;left:0;right:0;background:#04060c;transition:height .2s}
+#lids .t{top:0;height:calc(var(--o) * 10svh)}
+#lids .b{bottom:0;height:calc(var(--o) * 58svh)}
+#lids .t::after,#lids .b::before{content:'';position:absolute;left:0;right:0;height:26px}
+#lids .t::after{bottom:-26px;background:linear-gradient(#04060c,transparent)}
+#lids .b::before{top:-26px;background:linear-gradient(transparent,#04060c)}
+
+/* タイトル */
+#vTitle{justify-content:flex-start;gap:6px}
+.logoT{margin-top:min(3svh,24px);text-align:center;font-family:var(--dot);color:#fff3c4;text-shadow:0 0 14px rgba(255,220,120,.6),0 3px 0 #1c1430}
+.logoT .l1{font-size:min(11vw,52px);line-height:1.05;letter-spacing:.04em}
+.logoT .l2{display:inline-block;margin-top:6px;font-size:min(7vw,30px);color:#ff9d8f;background:rgba(10,14,30,.6);padding:2px 10px;transform:rotate(-3deg)}
+.logoT .subt{display:block;margin-top:8px;font-size:12px;letter-spacing:.3em;color:#9fb2d8}
+.pills{position:absolute;left:50%;transform:translateX(-50%);top:calc(var(--conTop) + var(--conW) / 2.05 + 14px);width:var(--conW);display:flex;gap:10px;justify-content:center}
+.pill{min-height:52px;border-radius:30px;background:#2e2a33;border:3px solid var(--ink);box-shadow:0 5px 0 #0c0b10;color:var(--cream);font-family:var(--dot);font-size:20px;padding:0 22px;transform:rotate(-8deg)}
+.pill.go{background:#3a3440;min-width:150px;font-size:22px}
+.pill:active{transform:rotate(-8deg) translateY(4px);box-shadow:0 1px 0 #0c0b10}
+
+/* 遊び方 */
+#vHow{justify-content:center;gap:12px;background:rgba(6,9,20,.86);pointer-events:auto}
+.inst{width:min(440px,100%);background:var(--lcd2);color:#1e2b18;padding:14px 16px 10px;border:8px solid #2f2f35;border-radius:10px;min-height:0;overflow:hidden;font-family:var(--dot)}
+.inst h2{font-size:20px;margin-bottom:8px;letter-spacing:.1em;font-weight:400}
+.inst ol{margin-left:1.2em;display:flex;flex-direction:column;gap:7px;font-size:14px;line-height:1.5}
+.inst b{color:#9b1d14;font-weight:400}
+.credit{margin-top:8px;font-size:10px;line-height:1.4;color:#3d5034;text-align:center;font-family:var(--hand)}.credit a{color:inherit}
+.credit a.pv{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;font-size:12px}
+.sub{min-height:46px;width:min(440px,100%);border:1px solid rgba(247,238,220,.5);border-radius:4px;background:rgba(20,24,40,.8);color:var(--cream);font-size:16px;font-family:var(--dot)}
+
+/* 遊び中: 下の行に3つ（布団・寝たふり・まくら） */
+#vPlay{padding:0;touch-action:none}
+#acts{position:absolute;left:0;right:0;bottom:0;display:flex;gap:8px;padding:0 max(10px,env(safe-area-inset-right)) max(10px,calc(env(safe-area-inset-bottom) + 6px)) max(10px,env(safe-area-inset-left));z-index:3}
+.act{flex:1;max-width:140px;margin:0 auto;height:var(--actH);border-radius:12px;border:3px solid var(--ink);position:relative;overflow:hidden;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;box-shadow:0 5px 0 rgba(0,0,0,.55);transition:transform .06s,box-shadow .06s}
+.act span{position:relative;font-family:var(--dot);font-size:13px;color:var(--ink);background:rgba(247,238,220,.92);padding:1px 6px;border-radius:3px;white-space:nowrap}
+#bFuton{background:repeating-conic-gradient(var(--check) 0 25%,var(--cream) 0 50%) 0 0/28px 28px}
+#bSleep{background:#7d8fc9}
+#bSleep svg{position:absolute;left:50%;top:12%;width:64%;transform:translateX(-50%)}
+#bPillow{background:#c9d4ea url(img/pillow.webp) 50% 22%/80% auto no-repeat}
+.act.on{transform:translateY(5px);box-shadow:0 0 0 rgba(0,0,0,.55),inset 0 0 0 4px var(--memo)}
+.act.on span{background:var(--memo)}
+.act:disabled{filter:grayscale(.6) brightness(.75)}
+.hint{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--memo);color:#2b2208;padding:6px 14px;font-size:17px;font-family:var(--hand);font-weight:600;box-shadow:0 4px 10px rgba(0,0,0,.45);pointer-events:none;z-index:5}
+#finger{position:absolute;width:46px;height:46px;pointer-events:none;z-index:6;animation:tap .7s ease-in-out infinite alternate}
+@keyframes tap{to{transform:translate(4px,8px) scale(.94)}}
+#bigMsg{position:absolute;left:0;right:0;top:12svh;text-align:center;font-family:var(--dot);font-size:min(13vw,62px);color:#fff3c4;text-shadow:0 4px 0 #000,0 0 30px rgba(0,0,0,.6);pointer-events:none;z-index:5}
+
+/* 3D の上の文字 */
+.ono{position:absolute;left:0;top:0;font-family:var(--dot);white-space:nowrap;color:#fff;-webkit-text-stroke:4px #10131f;paint-order:stroke fill;font-size:24px;line-height:1;will-change:transform,opacity}
+.ono.warm{color:#ffd27a}.ono.big{font-size:32px;color:#ff9d8f}.ono.cool{color:#9fd8ff}
+.sb{position:absolute;left:0;top:0;background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:4px 9px;font-weight:600;font-size:15px;white-space:nowrap;transform-origin:50% 100%}
+.sb::after{content:"";position:absolute;left:50%;bottom:-9px;margin-left:-6px;border:6px solid transparent;border-top-color:var(--ink);border-bottom:0}
+.sb.wall{background:#d8d3ea;border-style:dashed}
+
+/* 結果: ゲーム機のプレイ記録＋おかんのメモ */
+#vResult{justify-content:flex-end;gap:10px}
+.rec{position:relative;width:min(400px,100%);background:#2f2f35;border-radius:12px 12px 26px 26px;padding:10px;box-shadow:0 14px 30px rgba(0,0,0,.55);min-height:0}
+.lcd{background:var(--lcd2);color:#1e2b18;font-family:var(--dot);padding:10px 12px;border-radius:4px;min-height:0}
+.lcd .hd{display:flex;justify-content:space-between;font-size:13px;border-bottom:2px solid #1e2b18;padding-bottom:3px}
+.lcd .r{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;min-height:clamp(28px,4.4svh,36px);border-bottom:1px dashed rgba(30,43,24,.35);opacity:0;transition:opacity .15s}
+.lcd .r b{font-weight:400;font-size:clamp(20px,3.4svh,26px)}
+.lcd .r.on{opacity:1}
+.lcd .rank{display:flex;align-items:center;gap:10px;margin-top:8px;opacity:0}
+.lcd .rank.on{opacity:1;animation:blink3 .5s steps(2) 3}
+@keyframes blink3{50%{opacity:0}}
+.lcd .rank em{font-style:normal;font-size:44px;line-height:1;border:3px solid #1e2b18;padding:2px 10px}
+.lcd .rank span{font-size:clamp(17px,4.6vw,21px);line-height:1.25}
+.memo{position:absolute;right:-6px;top:-62px;width:min(56vw,220px);background:var(--memo);color:#2b2208;font-family:var(--hand);font-weight:600;padding:10px 12px 8px;box-shadow:0 6px 14px rgba(0,0,0,.45);transform:rotate(4deg) scale(0);transform-origin:80% 0;transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
+.memo.on{transform:rotate(4deg) scale(1)}
+.memo p{font-size:17px;line-height:1.35}
+.memo small{display:block;text-align:right;font-size:14px;margin-top:2px}
+.rBtns{width:min(400px,100%);display:flex;flex-direction:column;gap:8px;opacity:0;transition:opacity .3s;pointer-events:none}
+.rBtns.on{opacity:1;pointer-events:auto}
+.rRow{display:flex;gap:8px}
+.rRow>button{flex:1;min-width:0;min-height:46px;border-radius:6px;font-size:15px;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 6px;font-family:var(--dot)}
+#bAgain{flex:1.6;background:var(--red);color:#fff;border:3px solid var(--ink);box-shadow:0 4px 0 #7a1e18;font-size:19px;letter-spacing:.06em}
+.ghost{background:rgba(20,24,40,.82);color:var(--cream);border:1px solid rgba(247,238,220,.45)}
+#bX{background:#000;color:#fff}
+#bX svg{width:16px;height:16px;fill:currentColor}
+
+@media (max-height:700px){
+  .inst{padding:10px 12px 6px}.inst ol{font-size:12.5px;gap:4px}.inst h2{font-size:17px;margin-bottom:4px}
+  .pill{min-height:48px;font-size:18px}.lcd .r{font-size:14px}.lcd .rank em{font-size:36px}
+  .rRow>button{min-height:44px}.memo{top:-54px}.memo p{font-size:15px}
+}
+#boot-err{position:fixed;inset:auto 8px 8px 8px;z-index:99;background:#fff;color:#b00;font:12px/1.4 monospace;white-space:pre-wrap;padding:10px;border-radius:8px}
+</style>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+</head>
+<body>
+<canvas id="gl"></canvas>
+
+<div id="fg" aria-hidden="false">
+  <div class="glow"></div>
+  <div id="kid"><img id="kidImg" src="img/kid_play.webp" alt=""></div>
+  <div id="quilt"></div>
+  <div class="con" id="con">
+    <div id="stk"></div>
+    <div id="led" class="on"></div>
+    <button id="bVol" type="button" aria-label="Volume"><b data-t="vol"></b><span class="sl"><i></i></span></button>
+    <div class="dpad"></div><div class="spk"></div>
+    <div class="scrwrap"><canvas id="scr" width="160" height="120"></canvas></div>
+    <div class="logo">YOFUKA</div>
+    <button id="bA" type="button" aria-label="A">A</button>
+  </div>
+  <img class="hand" id="handL" src="img/hand_l.webp" alt="">
+  <img class="hand" id="handR" src="img/hand_r.webp" alt="">
+  <img id="pil" src="img/pillow.webp" alt="">
+</div>
+<div id="lids"><i class="t"></i><i class="b"></i></div>
+<div id="fx"></div>
+
+<div id="boot" aria-hidden="true">
+  <div class="bs"><div class="lg">YOFUKA</div><div class="cells" id="cells"></div><p class="blink" data-t="loading">電池を入れています</p></div>
+</div>
+
+<div id="corner">
+  <button id="bLang" type="button" aria-label="Language"><span id="langTxt">EN</span></button>
+  <button id="bMute" type="button" aria-label="Sound">
+    <svg id="icOn" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>
+    <svg id="icOff" viewBox="0 0 24 24" hidden><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>
+  </button>
+</div>
+
+<main id="vTitle" class="view">
+  <h1 class="logoT"><span class="l1" data-t="title1"></span><br><span class="l2" data-t="title2"></span><span class="subt" data-t="sub"></span></h1>
+  <div class="pills"><button class="pill go" id="bStart" type="button" data-t="start"></button><button class="pill" id="bHow" type="button" data-t="how"></button></div>
+</main>
+
+<main id="vHow" class="view" hidden>
+  <div class="inst">
+    <h2 data-t="howT"></h2>
+    <ol><li data-h="h1"></li><li data-h="h2"></li><li data-h="h3"></li><li data-h="h4"></li><li data-h="h5"></li></ol>
+    <p class="credit">Art: generated cut-paper illustrations. Sounds: Kenney, rubberduck, Kerzoven, Joth, Wolfgang_ (CC0) / Wikimedia Commons (Public domain, CC0)。一覧は <a href="CREDITS.md" target="_blank" rel="noopener">CREDITS</a><br><a class="pv" href="privacy.html" target="_blank" rel="noopener">プライバシー / Privacy</a></p>
+  </div>
+  <button class="sub" id="bHowBack" type="button" data-t="back"></button>
+</main>
+
+<main id="vPlay" class="view" hidden>
+  <div id="acts">
+    <button type="button" class="act" id="bFuton"><span data-t="bFuton"></span></button>
+    <button type="button" class="act" id="bSleep"><svg viewBox="0 0 64 30" aria-hidden="true"><path d="M6 8 Q32 30 58 8" fill="none" stroke="#1b1a22" stroke-width="4" stroke-linecap="round"/><path d="M14 16 L9 25 M24 20 L22 29 M40 20 L42 29 M50 16 L55 25" stroke="#1b1a22" stroke-width="3" stroke-linecap="round"/></svg><span data-t="bSleep"></span></button>
+    <button type="button" class="act" id="bPillow"><span data-t="bPillow"></span></button>
+  </div>
+  <div class="hint" id="hint" hidden></div>
+  <svg id="finger" viewBox="0 0 48 48" hidden><path d="M18 44 L14 24 Q13 20 16.5 19.5 Q19.5 19.3 20 23 L21 28 L21 9 Q21 5 24.5 5 Q28 5 28 9 L28 22 Q32 20.5 34 23 Q38 22 39 26 L39 34 Q39 40 35 44 Z" fill="#fff" stroke="#1b1a22" stroke-width="2.5" stroke-linejoin="round"/></svg>
+  <div id="bigMsg" hidden></div>
+</main>
+
+<main id="vResult" class="view" hidden>
+  <div class="rec">
+    <div class="memo" id="memo"><p id="mText"></p><small id="mSign"></small></div>
+    <div class="lcd">
+      <div class="hd"><span data-t="resHd"></span><span id="rTime">5:30</span></div>
+      <div class="r" id="r1"><span data-t="rStage"></span><b id="rv1"></b></div>
+      <div class="r" id="r2"><span data-t="rNear"></span><b id="rv2"></b></div>
+      <div class="r" id="r3"><span data-t="rDoze"></span><b id="rv3"></b></div>
+      <div class="rank" id="rRank"><em id="rLetter"></em><span id="rName"></span></div>
+    </div>
+  </div>
+  <div class="rBtns" id="rBtns">
+    <div class="rRow"><button id="bAgain" type="button" data-t="again"></button><button class="ghost" id="bTitle" type="button" data-t="toTitle"></button></div>
+    <div class="rRow"><button class="ghost" id="bSave" type="button" data-t="save"></button><button id="bX" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg><span data-t="xPost"></span></button></div>
+  </div>
+</main>
+
+<script>
+(function(){
+  var opt={passive:false};
+  ['gesturestart','gesturechange','gestureend'].forEach(function(n){document.addEventListener(n,function(e){e.preventDefault()},opt)});
+  document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},opt);
+  var last=0;document.addEventListener('touchend',function(e){var n=Date.now();if(n-last<300&&!(e.target.closest&&e.target.closest('button,a')))e.preventDefault();last=n},opt);
+  document.addEventListener('dblclick',function(e){e.preventDefault()},opt);
+  window.addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault()},opt);
+  window.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&['+','-','=','0',';'].indexOf(e.key)>=0)e.preventDefault()});
+  document.addEventListener('contextmenu',function(e){e.preventDefault()});
+})();
+// 起動失敗の保険。JS が動いたか（__jsUp）で判定し、読み込み中を失敗と出さない
+(function(){
+  var errs=[];
+  window.addEventListener('error',function(e){errs.push((e.message||'error')+' @'+(e.filename||'')+':'+(e.lineno||''))});
+  window.addEventListener('unhandledrejection',function(e){errs.push('reject: '+(e.reason&&e.reason.message||e.reason))});
+  setTimeout(function(){
+    if(window.__jsUp) return;
+    var d=document.createElement('div');d.id='boot-err';
+    d.textContent='起動できませんでした / failed to start\n'+(errs.join('\n')||'(no error captured)')+'\n'+navigator.userAgent;
+    document.body.appendChild(d);
+  },8000);
+})();
+</script>
+<script src="tm.js?v=1" data-game="midnight-gamer"></script>
+<script src="sfx.js?v=1"></script>
+<script src="data.js?v=1"></script>
+<script src="art.js?v=1"></script>
+<script type="module" src="game.js?v=1"></script>
+<script src="support.js?v=1" data-ja="あったかい牛乳" data-en="warm milk"></script>
+</body>
+</html>
