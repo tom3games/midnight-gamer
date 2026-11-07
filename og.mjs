@@ -1,5 +1,6 @@
 // SNS用サムネ og.png（1200x630）。node og.mjs（音は出さない）
 // ボス面で遊んでいる最中におかんがドアから覗く瞬間を縦画面で撮り、右にタイトルと一言を重ねる
+import './mute-auto.mjs'  // テスト中は絶対に音を出さない（playwright を無音に差し替え）
 import { chromium } from 'playwright'
 import { spawn } from 'node:child_process'
 import { readFileSync } from 'node:fs'

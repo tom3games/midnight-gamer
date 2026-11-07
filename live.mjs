@@ -1,3 +1,4 @@
+import './mute-auto.mjs'  // テスト中は絶対に音を出さない（playwright を無音に差し替え）
 import { MUTE_LAUNCH, muteContext } from './mute.mjs'
 // 公開URLの確認。node live.mjs（ログインしていないブラウザで見る）。SKIPGH=1 で GitHub ページの確認を省く
 // 深夜ゲーム、バレたら没収: タイトル → はじめる → チュートリアル（A・まくら・寝たふり）→ 早送りで終わり → プレイ記録

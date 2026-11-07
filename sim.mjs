@@ -1,6 +1,7 @@
 // 遊び方ごとの分布。種を変えて12回ずつ回す。node sim.mjs（音は出さない）
 // read=合図を読む（人の反応0.45秒）/ readSlow=遅い人（0.8秒）/ readMute=読むけど音はずっと消す
 // hide=ずっとまくらの下 / sleep=ずっと寝たふり / mash=何も隠さず進める / nothing=何もしない / random=適当
+import './mute-auto.mjs'  // テスト中は絶対に音を出さない（playwright を無音に差し替え）
 import { chromium } from 'playwright'
 import { spawn } from 'node:child_process'
 import { MUTE_LAUNCH, muteContext } from './mute.mjs'
