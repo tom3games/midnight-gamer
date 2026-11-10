@@ -47,7 +47,7 @@
 - snd/lose.mp3: 85 Short music jingles / Kenney / CC0
 
 ## 絵
-- img/mom_*.webp・dad_*.webp・kid_*.webp・hand_*.webp・pillow.webp: このゲームのために画像生成で作った切り絵（art/prompts、art/gen.sh、art/key.py）。おかんとおとんは同じ作者の「小人になっておかんと戦え」の人物を参照にした
+- img/mom_*.webp・dad_*.webp・kid_*.webp・hand_*.webp・pillow.webp: このゲームのために作った切り絵（切り抜きは art/key.py）。おかんとおとんは同じ作者の「小人になっておかんと戦え」の人物を参照にした
 - img/cat_*.webp: 同上（kobito-vs-okan の猫を流用）
 - 3D の部屋・台所・ゲーム機の中のドット絵: コードで描いたもの
 
