@@ -37,7 +37,7 @@ button{font-family:inherit;color:inherit;font-size:inherit;-webkit-user-select:n
 :focus-visible{outline:3px solid var(--memo);outline-offset:3px}
 #gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
 #fx{position:fixed;inset:0;z-index:30;pointer-events:none;overflow:hidden}
-.view{position:fixed;inset:0;z-index:20;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:max(56px,calc(env(safe-area-inset-top) + 50px)) 16px max(14px,calc(env(safe-area-inset-bottom) + 10px));pointer-events:none}
+.view{position:fixed;inset:0;z-index:20;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:max(56px,calc(env(safe-area-inset-top) + 50px)) 16px max(14px,calc(calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)) + 10px));pointer-events:none}
 .view > *{pointer-events:auto}
 
 /* ロード画面: ゲーム機の起動画面 */
@@ -130,7 +130,7 @@ body.mode-result #fg,body.mode-how #fg{display:none}
 
 /* 遊び中: 下の行に3つ（布団・寝たふり・まくら） */
 #vPlay{padding:0;touch-action:none}
-#acts{position:absolute;left:0;right:0;bottom:0;display:flex;gap:8px;padding:0 max(10px,env(safe-area-inset-right)) max(10px,calc(env(safe-area-inset-bottom) + 6px)) max(10px,env(safe-area-inset-left));z-index:3}
+#acts{position:absolute;left:0;right:0;bottom:0;display:flex;gap:8px;padding:0 max(10px,env(safe-area-inset-right)) max(10px,calc(calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)) + 6px)) max(10px,env(safe-area-inset-left));z-index:3}
 .act{flex:1;max-width:140px;margin:0 auto;height:var(--actH);border-radius:12px;border:3px solid var(--ink);position:relative;overflow:hidden;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;box-shadow:0 5px 0 rgba(0,0,0,.55);transition:transform .06s,box-shadow .06s}
 .act span{position:relative;font-family:var(--dot);font-size:13px;color:var(--ink);background:rgba(247,238,220,.92);padding:1px 6px;border-radius:3px;white-space:nowrap}
 #bFuton{background:repeating-conic-gradient(var(--check) 0 25%,var(--cream) 0 50%) 0 0/28px 28px}
@@ -293,6 +293,6 @@ body.mode-result #fg,body.mode-how #fg{display:none}
 <script src="data.js?v=2"></script>
 <script src="art.js?v=2"></script>
 <script type="module" src="game.js?v=2"></script>
-<script src="support.js?v=5" data-ja="あったかい牛乳" data-en="warm milk"></script>
+<script src="support.js?v=6" data-ja="あったかい牛乳" data-en="warm milk"></script>
 </body>
 </html>
